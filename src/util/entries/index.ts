@@ -1,6 +1,7 @@
 import { postMessage } from "..";
 import { db } from "../../index";
 import { Entry } from "../../types/index";
+import { journal_channel } from '../../config';
 
 export const postToJournal = async (
   user: string,
@@ -14,7 +15,7 @@ export const postToJournal = async (
 
   if (entry.submitted) {
   } else {
-    await postMessage("C0P5NE354", [
+    await postMessage(journal_channel, [
       {
         type: "section",
         text: {
