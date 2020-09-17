@@ -11,6 +11,15 @@ export const postMessage = (channel: string, blocks?: (any)[], text: string = ""
     })
 }
 
+export const updateBlockMessage = (channel: string, ts: string, blocks?: (any)[]) => {
+    return app.client.chat.update({
+        token,
+        ts,
+        channel,
+        blocks
+    })
+}
+
 export const postMessageCurry = (channel: string) => (blocks?: (any)[], text: string = "") => {
     return app.client.chat.postMessage({
         channel: channel,

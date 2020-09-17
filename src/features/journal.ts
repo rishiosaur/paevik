@@ -3,7 +3,7 @@ import { App, ButtonAction } from "@slack/bolt";
 import { postToJournal } from "../util/entries/index";
 import { getEntryById } from "../util/db/index";
 import { Entry } from "../types/index";
-import { postMessageCurry } from "../util/index";
+import { postMessageCurry, updateBlockMessage } from "../util/index";
 const journal = async (app: App) => {
   app.action("postEntry", async ({ ack, context, body, action }) => {
     await ack();
@@ -29,6 +29,20 @@ const journal = async (app: App) => {
       im(null, "You've already submitted that message, sorry.");
     } else {
       await postToJournal(`<@${user}>`, entry, id, user);
+      await updateBlockMessage(
+        body.channel.id,
+        body.message.ts,
+        [
+          body.message.blocks[0],
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "✅"
+            }
+          },
+        ]
+      )
       await im([
         {
           type: "section",
