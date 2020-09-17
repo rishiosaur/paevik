@@ -25,34 +25,30 @@ const journal = async (app: App) => {
     console.log(submitted);
     // console.log(entry)
 
-    if (submitted) {
-      im(null, "You've already submitted that message, sorry.");
-    } else {
-      await postToJournal(`<@${user}>`, entry, id, user);
-      await updateBlockMessage(
-        body.channel.id,
-        body.message.ts,
-        [
-          body.message.blocks[0],
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": "✅"
-            }
-          },
-        ]
-      )
-      await im([
+    await postToJournal(`<@${user}>`, entry, id, user);
+    await updateBlockMessage(
+      body.channel.id,
+      body.message.ts,
+      [
+        body.message.blocks[0],
         {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry (id: ${id}) today! Feel free to come back anytime, <@${user}> :D`,
-          },
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": "✅"
+          }
         },
-      ]);
-    }
+      ]
+    )
+    await im([
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry (id: ${id}) today! Feel free to come back anytime, <@${user}> :D`,
+        },
+      },
+    ]);
   });
 
   app.action("postEntryAnonymously", async ({ ack, context, body, action }) => {
