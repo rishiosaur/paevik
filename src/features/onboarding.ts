@@ -44,7 +44,7 @@ const onboarding = async (app: App) => {
                         "text": "Let's set that up after you write your first entry. Go ahead! I can't wait to see it :smile:"
                     }
                 }
-            ])
+            ], "Welcome to Paevik, the journalling bot for Slack!")
     
             await createUser(user_id)
             await setUserState(user_id, "creatingEntry")
@@ -64,7 +64,7 @@ const onboarding = async (app: App) => {
                         "text": `Welcome back to Paevik. Let's get you started with a new journal entry for *${getTime()}*! Type away, I can't wait to see your entry!`
                     }
                 }
-            ])
+            ], "Welcome back to Paevik!")
             setUserState(user_id, "creatingEntry")
         }
 
