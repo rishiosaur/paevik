@@ -49,16 +49,16 @@ const messaging = async (app: App) => {
                             "value": id,
                             "action_id": "noPost"
                         },
-                        {
-                            "type": "button",
-                            "text": {
-                                "type": "plain_text",
-                                "emoji": true,
-                                "text": "Send anonymously"
-                            },
-                            "value": id,
-                            "action_id": "postEntryAnonymously"
-                        }
+                        // {
+                        //     "type": "button",
+                        //     "text": {
+                        //         "type": "plain_text",
+                        //         "emoji": true,
+                        //         "text": "Send anonymously"
+                        //     },
+                        //     "value": id,
+                        //     "action_id": "postEntryAnonymously"
+                        // }
                     ]
                 }
             ])
