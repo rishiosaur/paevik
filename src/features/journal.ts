@@ -34,7 +34,7 @@ const journal = async (app: App) => {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry today! Feel free to come back anytime, <@${user}> :D`,
+            text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry (id: ${id}) today! Feel free to come back anytime, <@${user}> :D`,
           },
         },
       ]);
@@ -71,7 +71,7 @@ const journal = async (app: App) => {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry today! Feel free to come back anytime, <@${user}> :D`,
+            text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry (id: ${id}) today! Feel free to come back anytime, <@${user}> :D`,
           },
         },
       ]);
