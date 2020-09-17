@@ -1,3 +1,4 @@
+import { getTime } from './../time/index';
 import { postMessage } from "..";
 import { db } from "../../index";
 import { Entry } from "../../types/index";
@@ -13,6 +14,9 @@ export const postToJournal = async (
 
   const entry = await (await ref.get()).data();
 
+  const emoji = [ "parrot_love",  "bellhop_bell",  "pencil",  "thinkspin"]
+  const random = emoji[Math.floor(Math.random() * emoji.length)]
+
   if (entry.submitted) {
   } else {
     await postMessage(journal_channel, [
@@ -20,7 +24,7 @@ export const postToJournal = async (
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `:pencil: New Journal entry from ${user}:`,
+          text: `:${random}: New Journal entry from ${user} on ${getTime()}:`,
         },
       },
       {
