@@ -1,8 +1,8 @@
-import { getTime } from './../time/index';
+import { getTime } from "./../time/index";
 import { postMessage } from "..";
 import { db } from "../../index";
 import { Entry } from "../../types/index";
-import { journal_channel } from '../../config';
+import { journal_channel } from "../../config";
 
 export const postToJournal = async (
   user: string,
@@ -14,8 +14,8 @@ export const postToJournal = async (
 
   const entry = await (await ref.get()).data();
 
-  const emoji = [ "parrot_love",  "bellhop_bell",  "pencil",  "thinkspin"]
-  const random = emoji[Math.floor(Math.random() * emoji.length)]
+  const emoji = ["parrot_love", "bellhop_bell", "pencil", "thinkspin"];
+  const random = emoji[Math.floor(Math.random() * emoji.length)];
 
   if (entry.submitted) {
   } else {
