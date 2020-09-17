@@ -1,4 +1,4 @@
-import { signing_secret, token, name } from "./config";
+import { signing_secret, token, name, apiKey, authDomain, databaseURL, projectId, storageBucket, messagingSenderId, appId, measurementId } from './config';
 import { App } from "@slack/bolt";
 import {
   filterDM,
@@ -17,14 +17,14 @@ export const app = new App({
 });
 
 const firebase = initializeApp({
-  apiKey: "AIzaSyBIFkxMVVKRUmLWJmwWHC9KEySST7VfU-g",
-  authDomain: "paevik-bot.firebaseapp.com",
-  databaseURL: "https://paevik-bot.firebaseio.com",
-  projectId: "paevik-bot",
-  storageBucket: "paevik-bot.appspot.com",
-  messagingSenderId: "703117243972",
-  appId: "1:703117243972:web:bc0bb786de678fe66bee11",
-  measurementId: "G-8340LLTRRZ",
+  apiKey,
+  authDomain,
+  databaseURL,
+  projectId,
+  storageBucket,
+  messagingSenderId,
+  appId,
+  measurementId,
 });
 
 export const db = firebase.firestore();
@@ -35,6 +35,7 @@ export const storage = firebase.storage();
   await app.start(process.env.PORT || 3000);
 
   console.log(`${name} is running! 🔥`);
+  console.log("running on:", firebase.name)
 
   for (const [feature, handler] of Object.entries(features)) {
     handler(app);
