@@ -1,3 +1,4 @@
+import { journal_channel } from './../config';
 import { getTime } from '../util/time/index';
 import { App } from '@slack/bolt';
 import { debug } from 'console';
@@ -33,7 +34,7 @@ const onboarding = async (app: App) => {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": "After you DM me your entry (right after you read this message, feel free to write one!), you can:\n• Post your entry to <#journal> \n • Send the entry to your email \n • Find a journal entry by date"
+                        "text": `After you DM me your entry (right after you read this message, feel free to write one!), you can:\n• Post your entry to <#${journal_channel}> \n • Send the entry to your email \n • Find a journal entry by date`
                     }
                 },
                 {
