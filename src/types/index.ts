@@ -1,4 +1,4 @@
-export type UserState = "creatingEntry" | "submitted" | "idle", "updatingEntry"
+export type UserState = "creatingEntry" | "submitted" | "idle" | "updatingEntry"
 
 export interface User {
     state: UserState    
@@ -7,5 +7,7 @@ export interface User {
 export interface Entry {
     entry: string
     date: string
-    submitted: false
+    submitted: false,
+    message?: string,
+
 }
