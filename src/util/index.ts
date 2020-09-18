@@ -1,7 +1,6 @@
 import { token } from '../config';
 import { app } from '../index';
 
-
 export const postMessage = (channel: string, blocks?: (any)[], text: string = "") => {
     return app.client.chat.postMessage({
         channel: channel,
