@@ -7,7 +7,7 @@ import { postMessageCurry } from '../util/index';
 import { setUserState, createUser, checkIfUserExists } from '../util/db/index';
 
 const onboarding = async (app: App) => {
-    app.command("/entry", async ({ body, context, ack }) => {
+    app.command(process.env.environment == "dev" ? "/entry-test" : "/entry", async ({ body, context, ack }) => {
         await ack()
 
         const { user_id } = body
