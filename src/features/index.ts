@@ -3,3 +3,5 @@ export { default as journal } from "./journal";
 
 export { default as onboarding } from "./onboarding";
 export { default as messaging } from "./message";
+
+export { default as home } from './home'
