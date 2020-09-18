@@ -1,8 +1,8 @@
-import { getTime } from './../time/index';
-import { postMessage } from "..";
-import { db } from "../../index";
-import { Entry } from "../../types/index";
-import { journal_channel } from '../../config';
+import { getTime } from '../../../shared/time/index';
+import { postMessage } from "../../../shared/messages";
+import { db } from "../../../index";
+import { Entry } from "../../../types/index";
+import { journal_channel } from '../../../config';
 
 export const postToJournal = async (
   user: string,
@@ -18,8 +18,13 @@ export const postToJournal = async (
   const random = emoji[Math.floor(Math.random() * emoji.length)]
 
   if (entry.submitted) {
-  } else {
-    await postMessage(journal_channel, [
+    
+  }
+  
+  await ref.update({
+    submitted: true,
+  });
+    return postMessage(journal_channel, [
       {
         type: "section",
         text: {
@@ -35,8 +40,6 @@ export const postToJournal = async (
         },
       },
     ]);
-    await ref.update({
-      submitted: true,
-    });
-  }
+    
+  
 };
