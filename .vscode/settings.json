@@ -1,4 +1,3 @@
-
 {
 	"eslint.enable": true,
 	"editor.codeActionsOnSave": {
@@ -6,5 +5,5 @@
 	},
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
 	"editor.formatOnSave": true,
-	"editor.lineNumbers": false
+	"editor.lineNumbers": "on"
 }
