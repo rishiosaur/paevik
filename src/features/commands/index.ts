@@ -42,47 +42,7 @@ const commands = async (app: App) => {
           null,
           `I'm sorry, <@${uid}>. I couldn't find any entry with ID ${id}. Please try a different query.`
         );
-      imE([
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: `:mag:  I've found an entry with id \`${id}\`!`,
-          },
-        },
-        {
-          type: "section",
-          fields: [
-            {
-              type: "mrkdwn",
-              text: `*Date:*\n${entry.date}`,
-            },
-            {
-              type: "mrkdwn",
-              text: `*By:*\n<@${uid}>`,
-            },
-            {
-              type: "mrkdwn",
-              text: `*Submitted to channel:* \n${
-                entry.submitted ? "Yes" : "No"
-              }`,
-            },
-            {
-              type: "mrkdwn",
-              text: `*Public Message:* \n${
-                entry.submitted ? await getPermalink(entry.message) : "N/A"
-              }`,
-            },
-          ],
-        },
-        {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text: `> ${entry.entry}`,
-          },
-        },
-      ]);
+      imE(await createEntryBlocks(entry, uid, getPermalink));
     } else if (date) {
       const entriesProt = await findEntryByDate(uid, date);
 
@@ -95,47 +55,9 @@ const commands = async (app: App) => {
         const entries = entriesProt.docs.map((x) => x.data()) as Entry[];
 
         const entryBlocks = await Promise.all(
-          entries.map(async (entry) => {
-            return [
-              {
-                type: "divider",
-              },
-              {
-                type: "section",
-                fields: [
-                  {
-                    type: "mrkdwn",
-                    text: `*Date:*\n${entry.date}`,
-                  },
-                  {
-                    type: "mrkdwn",
-                    text: `*By:*\n<@${uid}>`,
-                  },
-                  {
-                    type: "mrkdwn",
-                    text: `*Submitted to channel:* \n${
-                      entry.submitted ? "Yes" : "No"
-                    }`,
-                  },
-                  {
-                    type: "mrkdwn",
-                    text: `*Public Message:* \n${
-                      entry.submitted
-                        ? await getPermalink(entry.message)
-                        : "N/A"
-                    }`,
-                  },
-                ],
-              },
-              {
-                type: "section",
-                text: {
-                  type: "mrkdwn",
-                  text: `> ${entry.entry}`,
-                },
-              },
-            ];
-          })
+          entries.map(
+            async (entry) => await createEntryBlocks(entry, uid, getPermalink)
+          )
         );
 
         imE([
@@ -194,3 +116,44 @@ const commands = async (app: App) => {
 };
 
 export default commands;
+async function createEntryBlocks(
+  entry: Entry,
+  uid: string,
+  getPermalink: (ts: string) => Promise<unknown>
+): Promise<Array<unknown>> {
+  return [
+    {
+      type: "divider",
+    },
+    {
+      type: "section",
+      fields: [
+        {
+          type: "mrkdwn",
+          text: `*Date:*\n${entry.date}`,
+        },
+        {
+          type: "mrkdwn",
+          text: `*By:*\n<@${uid}>`,
+        },
+        {
+          type: "mrkdwn",
+          text: `*Submitted to channel:* \n${entry.submitted ? "Yes" : "No"}`,
+        },
+        {
+          type: "mrkdwn",
+          text: `*Public Message:* \n${
+            entry.submitted ? await getPermalink(entry.message) : "N/A"
+          }`,
+        },
+      ],
+    },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: `> ${entry.entry}`,
+      },
+    },
+  ];
+}
