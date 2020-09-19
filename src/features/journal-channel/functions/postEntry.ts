@@ -1,7 +1,7 @@
 import { journal_channel } from "../../../config";
 import { ButtonAction, SlackAction, App } from "@slack/bolt";
 import { postToJournal } from "./postToJournal";
-import { getEntryById } from "../../entries/functions/getEntryById";
+import { findEntryById } from "../../entries/functions/findEntryById";
 import { Entry } from "../../../types/index";
 import { postMessageCurry } from "../../../shared/messages/index";
 import { app } from "../../../index";
@@ -17,7 +17,7 @@ export async function postEntry(ack, action, body: SlackAction, name: string) {
   const id = act.value;
 
   const user = body.user.id;
-  const { entry, submitted } = (await getEntryById(user, id)) as Entry;
+  const { entry, submitted } = (await findEntryById(user, id)) as Entry;
 
   const im = postMessageCurry(user);
 
