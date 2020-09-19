@@ -12,11 +12,13 @@
     "moment": "^2.28.0",
     "sha1": "^1.1.1",
     "typescript": "^3.9.5",
-    "nodemon": "^2.0.4",
     "ts-node": "^8.10.2"
   },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
   "scripts": {
-    "start": "nodemon -r dotenv/config src/index.ts",
+    "start": "ts-node -r dotenv/config src/index.ts",
     "dev": "nodemon -r dotenv/config src/index.ts",
     "test": "echo 'TODO'",
     "ngrok": "ngrok http 3000"
