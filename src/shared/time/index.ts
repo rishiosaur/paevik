@@ -1,5 +1,5 @@
 const moment = require("moment")
 
-const formatting = "MMMM DD YYYY"
+export const formatting = "YYYY-MM-DD"
 
 export const getTime = () => moment().format(formatting)
