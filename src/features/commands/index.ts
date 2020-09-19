@@ -11,6 +11,142 @@ const moment = require("moment");
 
 export type JournalCommand = "find" | "" | "create";
 const commands = async (app: App) => {
+  app.view("findEntry", async ({ ack, view, context, body, client }) => {
+    await ack();
+    const uid = body.user.id as string;
+    const values = view.state.values;
+
+    const imE = (blocks?: any[], text?: string) =>
+      postEphemeralCurry(uid)(uid, blocks, text);
+
+    const date = values.entryDate.value.selected_date || null;
+    const id = values.entryId.value.value || null;
+    console.log(values);
+
+    console.log(date, id);
+
+    const getPermalink = async (ts: string) =>
+      (
+        await client.chat.getPermalink({
+          message_ts: ts,
+          channel: journal_channel,
+          token: token,
+        })
+      ).permalink;
+
+    if (id) {
+      const entry = (await findEntryById(uid, id)) as Entry;
+
+      if (!entry)
+        imE(
+          null,
+          `I'm sorry, <@${uid}>. I couldn't find any entry with ID ${id}. Please try a different query.`
+        );
+      imE([
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `:mag:  I've found an entry with id \`${id}\`!`,
+          },
+        },
+        {
+          type: "section",
+          fields: ([
+            {
+              type: "mrkdwn",
+              text: `*Date:*\n${entry.date}`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*By:*\n<@${uid}>`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*Submitted to channel:* \n${
+                entry.submitted ? "Yes" : "No"
+              }`,
+            },
+          ] as any[]).concat(
+            entry.submitted && {
+              type: "mrkdwn",
+              text: `*Submission:* \n${await getPermalink(entry.message)}`,
+            }
+          ),
+        },
+        {
+          type: "section",
+          text: {
+            type: "mrkdwn",
+            text: `> ${entry.entry}`,
+          },
+        },
+      ]);
+    } else if (date) {
+      const entriesProt = await findEntryByDate(uid, date);
+
+      if (entriesProt.empty) {
+        imE(
+          null,
+          `I'm sorry, <@${uid}>. I couldn't find any entry with date ${date}. Please try a different query.`
+        );
+      } else {
+        const entries = entriesProt.docs.map((x) => x.data()) as Entry[];
+
+        const entryBlocks = await Promise.all(entries.map(async (entry) => {
+            
+            return [
+          {
+            type: "divider",
+          },
+          {
+            type: "section",
+            fields: [
+              {
+                type: "mrkdwn",
+                text: `*Date:*\n${entry.date}`,
+              },
+              {
+                type: "mrkdwn",
+                text: `*By:*\n<@${uid}>`,
+              },
+              {
+                type: "mrkdwn",
+                text: `*Submitted to channel:* \n${
+                  entry.submitted ? "Yes" : "No"
+                }`,
+              },
+              {
+                type: "mrkdwn",
+                text: `*Public Message:* \n${entry.submitted ? await getPermalink(entry.message) : "N/A"}`,
+              }
+            ]
+          },
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: `> ${entry.entry}`,
+            },
+          },
+        ]}));
+
+        imE([
+          {
+            type: "section",
+            text: {
+              type: "mrkdwn",
+              text: `:mag:  I found ${entries.length} ${
+                entries.length > 1 ? "entries" : "entry"
+              } from \`${date}\`!`,
+            },
+          },
+          ...(await [].concat(...(await entryBlocks))),
+        ]);
+      }
+    }
+  });
+
   app.command("/journal", async ({ ack, body, client, context, command }) => {
     let { text } = command;
 
@@ -119,6 +255,9 @@ const commands = async (app: App) => {
         );
         break;
     }
+
+    // }
+  });
 };
 
 export default commands;
