@@ -10,3 +10,7 @@ import { onboard } from "../onboarding/functions/onboarding";
 const moment = require("moment");
 
 export type JournalCommand = "find" | "" | "create";
+const commands = async (app: App) => {
+};
+
+export default commands;
