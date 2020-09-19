@@ -46,3 +46,8 @@ export const postEphemeralCurry = (channel: string) => (
 		token,
 		user,
 	})
+
+export const postEphemeralDMCurry = (user: string) => (
+	blocks?: any[],
+	text = ''
+) => app.client.chat.postEphemeral({ user, channel: user, token, text, blocks })
