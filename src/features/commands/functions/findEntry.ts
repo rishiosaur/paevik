@@ -1,12 +1,14 @@
 import { currentDate } from '../../../shared/time/index';
 import { app } from '../../../index';
 import { AckFn } from '@slack/bolt';
+import { token } from '../../../config';
 
 export async function findEntry(ack: AckFn<any>, trigger_id: string) {
     await ack();
     
     await app.client.views.open({
         trigger_id: trigger_id,
+        token: token,
         view: {
             type: "modal",
             title: {

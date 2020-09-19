@@ -50,6 +50,16 @@ export function homeViewBlocks(event: AppHomeOpenedEvent) {
           value: event.user,
           action_id: "startEntry"
         },
+        {
+          type: "button",
+          text: {
+            type: "plain_text",
+            emoji: true,
+            text: ":mag: Search through your journal",
+          },
+          value: event.user,
+          action_id: "searchJournal"
+        }
       ],
     },
   ];

@@ -10,7 +10,11 @@ import { findEntry } from "./functions/findEntry";
 
 export type JournalCommand = "find" | "" | "create";
 const commands = async (app: App) => {
-  app.view("findEntry", async ({ ack, view, context, body, client }) => {
+  app.action(
+    "searchJournal",
+    async ({ ack, body }) => await findEntry(ack, (body as any).trigger_id)
+  );
+  app.view("findEntry", async ({ ack, view, body, client }) => {
     await ack();
     const uid = body.user.id as string;
     const values = view.state.values;
@@ -20,9 +24,6 @@ const commands = async (app: App) => {
 
     const date = values.entryDate.value.selected_date || null;
     const id = values.entryId.value.value || null;
-    console.log(values);
-
-    console.log(date, id);
 
     const getPermalink = async (ts: string) =>
       (
@@ -155,7 +156,7 @@ const commands = async (app: App) => {
 
   app.command(
     process.env.environment == "dev" ? "/journal-test" : "/journal",
-    async ({ ack, body, client, context, command }) => {
+    async ({ ack, body, command }) => {
       let { text } = command;
 
       const imE = (blocks?: any[], text?: string) =>
@@ -188,8 +189,6 @@ const commands = async (app: App) => {
           );
           break;
       }
-
-      // }
     }
   );
 };
