@@ -9,3 +9,4 @@ import { findEntryByDate } from "../entries/functions/findEntryByDate";
 import { onboard } from "../onboarding/functions/onboarding";
 const moment = require("moment");
 
+export type JournalCommand = "find" | "" | "create";
