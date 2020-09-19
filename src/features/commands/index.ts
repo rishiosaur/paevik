@@ -11,6 +11,12 @@ const moment = require("moment");
 
 export type JournalCommand = "find" | "" | "create";
 const commands = async (app: App) => {
+  app.command("/journal", async ({ ack, body, client, context, command }) => {
+    let { text } = command;
+
+    const imE = (blocks?: any[], text?: string) =>
+      postEphemeralCurry(body.user_id)(body.user_id, blocks, text);
+
     switch (text) {
       case "":
       case "query":
