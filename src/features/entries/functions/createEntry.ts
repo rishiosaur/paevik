@@ -1,12 +1,11 @@
-import { db } from "../../../index";
-import { Entry } from '../../../types/index';
-import { currentDate } from '../../../shared/time/index';
+import { db } from '../../../index'
+import { Entry } from '../../../types/index'
 
-
-export function createEntry(user: string, entry: Entry) {
-  return db
-    .collection("users")
-    .doc(user)
-    .collection("entries")
-    .add(entry);
+export function createEntry(
+	user: string,
+	entry: Entry
+): Promise<
+	firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
+> {
+	return db.collection('users').doc(user).collection('entries').add(entry)
 }
