@@ -26,7 +26,7 @@ export const onboard = async (ack: AckFn<any>, user_id: string) => {
 		)
 
 		await createUser(user_id)
-	} else if ((await getUserState(user_id)) == 'creatingEntry') {
+	} else if ((await getUserState(user_id)) === 'creatingEntry') {
 		await ephemeralDm(
 			undefined,
 			"Looks like you're still in the process of writing another entry. Let's finish that one before making a new one, shall we? ;P"
