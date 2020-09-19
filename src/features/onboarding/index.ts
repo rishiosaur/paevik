@@ -17,6 +17,11 @@ const onboarding = async (app: App) => {
 
         await onboard(ack, value)
     })
+
+    app.shortcut("startEntry", async({ shortcut, ack }) => {
+        await onboard(ack, shortcut.user.id)
+    })
+    
 }
 
 export default onboarding;
