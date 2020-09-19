@@ -147,7 +147,7 @@ const commands = async (app: App) => {
     }
   });
 
-  app.command("/journal", async ({ ack, body, client, context, command }) => {
+  app.command(process.env.environment == "dev" ? "/journal-test" : "/journal", async ({ ack, body, client, context, command }) => {
     let { text } = command;
 
     const imE = (blocks?: any[], text?: string) =>
