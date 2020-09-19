@@ -9,19 +9,30 @@ import { getUserState, setUserState } from "../../shared/db/index";
 import { createEntry } from "./functions/createEntry";
 import { postMessageCurry } from "../../shared/messages/index";
 import { createEntryBlocks } from "./blocks/createEntryBlocks";
+import { getTime } from "../../shared/time/index";
 
 const messaging = async (app: App) => {
   app.message(
     filterChannelType("im"),
     filterNoBotMessages,
     async ({ message, body, say }) => {
-      const { user, text } = message;
+      const { user, text, files, ...other } = message;
+      
       const state = await getUserState(user);
 
       const im = postMessageCurry(user);
 
+      const entryFiles = files || null
+
+      console.log(files)
+
       if (state === "creatingEntry") {
-        const { id } = await createEntry(user, text);
+        const { id } = await createEntry(user, {
+          entry: text,
+          date: getTime(),
+          submitted: false,
+          files: entryFiles
+        });
 
         await im(createEntryBlocks(user, id));
         await setUserState(user, "submitted");
