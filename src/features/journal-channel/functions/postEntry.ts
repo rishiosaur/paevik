@@ -1,10 +1,10 @@
 import { journal_channel } from "../../../config";
 import { ButtonAction, SlackAction, App } from "@slack/bolt";
 import { postToJournal } from "./postToJournal";
-import { findEntryById } from "../../entries/functions/findEntryById";
 import { Entry } from "../../../types/index";
 import { postMessageCurry } from "../../../shared/messages/index";
 import { app } from "../../../index";
+import { findEntryById } from '../../entries/functions/findEntryById';
 
 export async function postEntry(ack, action, body: SlackAction, name: string) {
   await ack();
