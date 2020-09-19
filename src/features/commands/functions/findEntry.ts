@@ -1,7 +1,6 @@
-import { formatting } from "../../../shared/time/index";
+import { currentDate } from '../../../shared/time/index';
 import { app } from '../../../index';
 import { AckFn } from '@slack/bolt';
-const moment = require("moment");
 
 export async function findEntry(ack: AckFn<any>, trigger_id: string) {
     await ack();
@@ -34,7 +33,7 @@ export async function findEntry(ack: AckFn<any>, trigger_id: string) {
                     type: "input",
                     element: {
                         type: "datepicker",
-                        initial_date: moment().format(formatting),
+                        initial_date: currentDate(),
                         placeholder: {
                             type: "plain_text",
                             text: "Select a date",

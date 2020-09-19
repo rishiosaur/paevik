@@ -7,7 +7,6 @@ import { journal_channel, token } from "../../config";
 import { findEntryByDate } from "../entries/functions/findEntryByDate";
 import { onboard } from "../onboarding/functions/onboarding";
 import { findEntry } from "./functions/findEntry";
-const = require("moment");
 
 export type JournalCommand = "find" | "" | "create";
 const commands = async (app: App) => {

@@ -1,5 +1,5 @@
 import { journal_channel } from "../../../config";
-import { getTime } from "../../../shared/time/index";
+import { currentDate } from "../../../shared/time/index";
 
 export function createEntryBlocks(user: string, id: string): any[] {
   return [
@@ -7,7 +7,7 @@ export function createEntryBlocks(user: string, id: string): any[] {
       type: "section",
       text: {
         type: "mrkdwn",
-        text: `That's an awesome entry, <@${user}>! Thanks for writing. Do you want to publicly share it to the <#${journal_channel}> channel for others to comment on? I've written it to my database as part of *${getTime()}*'s entries.`,
+        text: `That's an awesome entry, <@${user}>! Thanks for writing. Do you want to publicly share it to the <#${journal_channel}> channel for others to comment on? I've written it to my database as part of *${currentDate()}*'s entries.`,
       },
     },
     {

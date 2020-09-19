@@ -1,4 +1,4 @@
-import { getTime } from '../../../shared/time/index';
+import { currentDate } from '../../../shared/time/index';
 import { AckFn, SlashCommand } from "@slack/bolt"
 import { postMessageCurry } from '../../../shared/messages/index';
 import { checkIfUserExists, createUser, setUserState } from '../../../shared/db/index';

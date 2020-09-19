@@ -1,4 +1,4 @@
-import { getTime } from '../../../shared/time/index';
+import { currentDate } from '../../../shared/time/index';
 import { postMessage } from "../../../shared/messages";
 import { db } from "../../../index";
 import { Entry } from "../../../types/index";
@@ -54,7 +54,7 @@ export const postToJournal = async (
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `:${random}: New Journal entry from ${user} on ${getTime()}:`,
+          text: `:${random}: New Journal entry from ${user} on ${currentDate()}:`,
         },
       },
       {

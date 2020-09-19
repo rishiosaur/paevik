@@ -1,6 +1,6 @@
 import { db } from "../../../index";
 import { Entry } from '../../../types/index';
-import { getTime } from '../../../shared/time/index';
+import { currentDate } from '../../../shared/time/index';
 
 
 export function createEntry(user: string, entry: Entry) {

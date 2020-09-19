@@ -1,5 +1,5 @@
 import { journal_channel } from '../../config';
-import { getTime } from '../../shared/time';
+import { currentDate } from '../../shared/time';
 import { App, ButtonAction } from '@slack/bolt';
 import { debug } from 'console';
 import { filterNoBotMessages } from '../../middleware';

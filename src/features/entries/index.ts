@@ -9,7 +9,7 @@ import { getUserState, setUserState } from "../../shared/db/index";
 import { createEntry } from "./functions/createEntry";
 import { postMessageCurry } from "../../shared/messages/index";
 import { createEntryBlocks } from "./blocks/createEntryBlocks";
-import { getTime } from "../../shared/time/index";
+import { currentDate } from "../../shared/time/index";
 
 const messaging = async (app: App) => {
   app.message(
@@ -29,7 +29,7 @@ const messaging = async (app: App) => {
       if (state === "creatingEntry") {
         const { id } = await createEntry(user, {
           entry: text,
-          date: getTime(),
+          date: currentDate(),
           submitted: false,
           files: entryFiles
         });
