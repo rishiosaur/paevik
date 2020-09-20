@@ -1,9 +1,10 @@
+import { getPermalinkFromJournalChannel } from '../../../shared/messages/index'
 import { Entry } from '../../../types/index'
 
 export async function createEntryBlocks(
 	entry: Entry,
-	uid: string,
-	getPermalink: (ts: string) => Promise<unknown>
+	uid: string
+	// getPerm .alink: . (ts: string) => Promise<unknown>
 ): Promise<Array<unknown>> {
 	return [
 		{
@@ -27,7 +28,9 @@ export async function createEntryBlocks(
 				{
 					type: 'mrkdwn',
 					text: `*Public Message:* \n${
-						entry.submitted ? await getPermalink(entry.message) : 'N/A'
+						entry.submitted
+							? await getPermalinkFromJournalChannel(entry.message)
+							: 'N/A'
 					}`,
 				},
 			],
