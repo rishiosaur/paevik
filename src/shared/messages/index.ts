@@ -1,4 +1,5 @@
-import { token } from '../../config'
+import { journal_channel, token } from '../../config'
+
 import { app } from '../../index'
 
 export const postMessage = (channel: string, blocks?: any[], text = '') =>
@@ -51,3 +52,17 @@ export const postEphemeralDMCurry = (user: string) => (
 	blocks?: any[],
 	text = ''
 ) => app.client.chat.postEphemeral({ user, channel: user, token, text, blocks })
+
+export const getPermalink = async (channel, ts): Promise<string> =>
+	(
+		await app.client.chat.getPermalink({
+			token,
+			channel,
+			message_ts: ts,
+		})
+	).permalink as string
+
+export const getPermalinkCurry = (channel) => (ts) => getPermalink(channel, ts)
+
+export const getPermalinkFromJournalChannel = (ts) =>
+	getPermalinkCurry(journal_channel)(ts)
