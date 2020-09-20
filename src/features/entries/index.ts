@@ -1,4 +1,5 @@
 import { App } from '@slack/bolt'
+import * as firebase from 'firebase'
 import { filterChannelType, filterNoBotMessages } from '../../middleware/index'
 import { getUserState, setUserState } from '../../shared/db/index'
 import { createEntry } from './functions/createEntry'
@@ -27,6 +28,7 @@ const messaging = async (app: App) => {
 					date: currentDate(),
 					submitted: false,
 					files: entryFiles,
+					timestamp: firebase.firestore.FieldValue.serverTimestamp(),
 				})
 
 				await im(createEntryBlocks(user, id))
