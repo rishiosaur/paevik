@@ -2,7 +2,6 @@ import { App } from '@slack/bolt'
 import { findEntryById } from '../entries/functions/findEntryById'
 import { postEphemeralCurry } from '../../shared/messages/index'
 import { Entry } from '../../types/index'
-import { journal_channel, token } from '../../config'
 import { findEntryByDate } from '../entries/functions/findEntryByDate'
 import { onboard } from '../onboarding/functions/onboarding'
 import { findEntry } from './functions/findEntry'
@@ -13,7 +12,7 @@ const commands = async (app: App) => {
 	app.action('searchJournal', async ({ ack, body }) =>
 		findEntry(ack, (body as any).trigger_id)
 	)
-	app.view('findEntry', async ({ ack, view, body, client }) => {
+	app.view('findEntry', async ({ ack, view, body }) => {
 		await ack()
 		const uid = body.user.id as string
 		const { values } = view.state
@@ -24,15 +23,6 @@ const commands = async (app: App) => {
 		const date = values.entryDate.value.selected_date || null
 		const id = values.entryId.value.value || null
 
-		const getPermalink = async (ts: string) =>
-			(
-				await client.chat.getPermalink({
-					message_ts: ts,
-					channel: journal_channel,
-					token,
-				})
-			).permalink
-
 		if (id) {
 			const entry = (await findEntryById(uid, id)) as Entry
 
@@ -41,7 +31,7 @@ const commands = async (app: App) => {
 					null,
 					`I'm sorry, <@${uid}>. I couldn't find any entry with ID ${id}. Please try a different query.`
 				)
-			imE(await createEntryBlocks(entry, uid, getPermalink))
+			imE(await createEntryBlocks(entry, uid))
 		} else if (date) {
 			const entriesProt = await findEntryByDate(uid, date)
 
@@ -54,9 +44,7 @@ const commands = async (app: App) => {
 				const entries = entriesProt.docs.map((x) => x.data()) as Entry[]
 
 				const entryBlocks = await Promise.all(
-					entries.map(async (entry) =>
-						createEntryBlocks(entry, uid, getPermalink)
-					)
+					entries.map(async (entry) => createEntryBlocks(entry, uid))
 				)
 
 				imE([
