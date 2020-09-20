@@ -1,7 +1,10 @@
 import { AppHomeOpenedEvent } from '@slack/bolt'
+import { createEntryBlocks } from '../../commands/functions/createEntryBlocks'
+import { getLastEntries } from '../../entries/functions/getLastEntries'
 
-export function homeViewBlocks(event: AppHomeOpenedEvent) {
-	return [
+export async function homeViewBlocks(event: AppHomeOpenedEvent) {
+	const entries = await getLastEntries(event.user)
+	const headerBlocks = [
 		{
 			type: 'header',
 			text: {
@@ -11,19 +14,11 @@ export function homeViewBlocks(event: AppHomeOpenedEvent) {
 			},
 		},
 		{
-			type: 'section',
-			text: {
-				type: 'mrkdwn',
-				text: `Welcome, <@${event.user}>! :sparkles: :book: :pen:—This is where you'll find all of your journal-related things. DM <@UHFEGV147> if you need some help.\n`,
-			},
-		},
-		{
 			type: 'context',
 			elements: [
 				{
 					type: 'mrkdwn',
-					text:
-						':pencil: Manually start an entry with `/entry `\n :scrappy: Add a journal entry to Scrapbook with `/scrapbook <id>`',
+					text: `Welcome, <@${event.user}>! :sparkles: :book: —This is where you'll find all of your journal-related things. DM <@UHFEGV147> if you need some help.\n`,
 				},
 			],
 		},
@@ -31,11 +26,21 @@ export function homeViewBlocks(event: AppHomeOpenedEvent) {
 			type: 'divider',
 		},
 		{
-			type: 'section',
+			type: 'header',
 			text: {
-				type: 'mrkdwn',
-				text: `*Basic Actions*`,
+				type: 'plain_text',
+				text: ':building_construction: Basic Actions',
+				emoji: true,
 			},
+		},
+		{
+			type: 'context',
+			elements: [
+				{
+					type: 'mrkdwn',
+					text: 'Shortcuts for doing stuff quickly :p',
+				},
+			],
 		},
 		{
 			type: 'actions',
@@ -63,5 +68,36 @@ export function homeViewBlocks(event: AppHomeOpenedEvent) {
 				},
 			],
 		},
+	]
+
+	const entryBlocks = await Promise.all(
+		entries.map((entry) => createEntryBlocks(entry, event.user))
+	)
+
+	console.log(entryBlocks)
+
+	return [
+		...headerBlocks,
+		{
+			type: 'divider',
+		},
+		{
+			type: 'header',
+			text: {
+				type: 'plain_text',
+				text: ':pencil: Latest entries',
+				emoji: true,
+			},
+		},
+		{
+			type: 'context',
+			elements: [
+				{
+					type: 'mrkdwn',
+					text: 'Here are your latest *5* entries, ordered by timestamp.',
+				},
+			],
+		},
+		...(await [].concat(...(await entryBlocks))),
 	]
 }
