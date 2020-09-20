@@ -25,7 +25,7 @@ export const postToJournal = async (
 			type: 'section',
 			text: {
 				type: 'mrkdwn',
-				text: `:${random}: New Journal entry from ${user} on ${currentDate()}:`,
+				text: `:${random}: New Journal entry from ${user} | ${currentDate()}:`,
 			},
 		},
 		{

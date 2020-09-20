@@ -1,5 +1,10 @@
 const moment = require('moment')
 
-export const formatting = 'YYYY-MM-DD'
+const momentFormat = 'YYYY-MM-DD'
+const slackFormat = '{date_short_pretty} at {time}'
 
-export const currentDate = () => moment().format(formatting)
+const isoTime = () => moment.format(momentFormat)
+const currentUnix = () => moment.unix()
+
+export const currentDate = () =>
+    `<!date^${currentUnix()}^${slackFormat}|${isoTime()}>`
