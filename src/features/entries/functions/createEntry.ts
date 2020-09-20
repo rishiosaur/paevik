@@ -1,9 +1,8 @@
 import { db } from '../../../index'
-import { Entry } from '../../../types/index'
 
 export function createEntry(
 	user: string,
-	entry: Entry
+	entry: any
 ): Promise<
 	firebase.firestore.DocumentReference<firebase.firestore.DocumentData>
 > {
