@@ -1,3 +1,5 @@
+import * as firebase from 'firebase'
+
 export type UserState = 'creatingEntry' | 'submitted' | 'idle' | 'updatingEntry'
 
 export interface User {
@@ -54,4 +56,5 @@ export interface Entry {
 	submitted: false
 	message?: string
 	files?: File[]
+	timestamp: firebase.firestore.Timestamp
 }
