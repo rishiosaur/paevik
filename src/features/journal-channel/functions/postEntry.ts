@@ -1,9 +1,11 @@
 import { ButtonAction, SlackAction } from '@slack/bolt'
-import { journal_channel } from '../../../config'
+import { File, Entry } from '../../../types/index'
+import { journal_channel, user_token } from '../../../config'
 import { postToJournal } from './postToJournal'
-import { Entry } from '../../../types/index'
+
 import { postMessageCurry } from '../../../shared/messages/index'
 import { findEntryById } from '../../entries/functions/findEntryById'
+import { app } from '../../../index'
 
 export async function postEntry(ack, action, body: SlackAction, name: string) {
 	await ack()
@@ -16,7 +18,20 @@ export async function postEntry(ack, action, body: SlackAction, name: string) {
 	const id = act.value
 
 	const user = body.user.id
-	const { entry, submitted } = (await findEntryById(user, id)) as Entry
+	const { entry, submitted, files } = (await findEntryById(user, id)) as Entry
+
+	console.log(files)
+
+	console.log(
+		`${files[0].url_private}?pub_secret=${[
+			...((
+				await app.client.files.sharedPublicURL({
+					file: files[0].id,
+					token: user_token,
+				})
+			).file as File).permalink_public.split('-'),
+		].pop()}`
+	)
 
 	const im = postMessageCurry(user)
 
