@@ -1,11 +1,13 @@
 import { ButtonAction, SlackAction } from '@slack/bolt'
-import { File, Entry } from '../../../types/index'
-import { journal_channel, user_token } from '../../../config'
+import { Entry } from '../../../types/index'
+import { journal_channel } from '../../../config'
 import { postToJournal } from './postToJournal'
 
-import { postMessageCurry } from '../../../shared/messages/index'
+import {
+	postMessageCurry,
+	getPermalinkFromJournalChannel,
+} from '../../../shared/messages/index'
 import { findEntryById } from '../../entries/functions/findEntryById'
-import { app } from '../../../index'
 
 export async function postEntry(ack, action, body: SlackAction, name: string) {
 	await ack()
@@ -22,18 +24,23 @@ export async function postEntry(ack, action, body: SlackAction, name: string) {
 
 	const im = postMessageCurry(user)
 
+	const journalPost = await postToJournal(user, id, entry)
+
 	if (entry.submitted) {
 		im(null, "You've already submitted that message, sorry.")
 	}
+
 	await im([
 		{
 			type: 'section',
 			text: {
 				type: 'mrkdwn',
-				text: `I've sent your message to <#${journal_channel}>.\n\nThanks for creating an entry (id: ${id}) today! Feel free to come back anytime, <@${user}> :D`,
+				text: `I've sent your message to <#${journal_channel}>. You can find it <${await getPermalinkFromJournalChannel(
+					journalPost.ts
+				)}|here>.\n\nThanks for creating an entry (id: \`${id}\`) today! Feel free to come back anytime, <@${user}> :D`,
 			},
 		},
 	])
 
-	return postToJournal(user, entry.entry, id, user, entry)
+	return journalPost
 }
