@@ -23,6 +23,12 @@ export const postToJournal = async (user: string, id: string, entry: Entry) => {
 
 	const imE = postEphemeralDMCurry(user)
 
+	await imE(null, 'Sending to public now!')
+
+	await ref.update({
+		submitted: true,
+	})
+
 	const initialBlocks = [
 		{
 			type: 'section',
@@ -105,10 +111,6 @@ export const postToJournal = async (user: string, id: string, entry: Entry) => {
 			display_name
 		)
 	}
-
-	await ref.update({
-		submitted: true,
-	})
 
 	return msg
 }
