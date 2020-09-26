@@ -18,24 +18,11 @@ export async function postEntry(ack, action, body: SlackAction, name: string) {
 	const id = act.value
 
 	const user = body.user.id
-	const { entry, submitted, files } = (await findEntryById(user, id)) as Entry
-
-	console.log(files)
-
-	console.log(
-		`${files[0].url_private}?pub_secret=${[
-			...((
-				await app.client.files.sharedPublicURL({
-					file: files[0].id,
-					token: user_token,
-				})
-			).file as File).permalink_public.split('-'),
-		].pop()}`
-	)
+	const entry = (await findEntryById(user, id)) as Entry
 
 	const im = postMessageCurry(user)
 
-	if (submitted) {
+	if (entry.submitted) {
 		im(null, "You've already submitted that message, sorry.")
 	}
 	await im([
@@ -48,5 +35,5 @@ export async function postEntry(ack, action, body: SlackAction, name: string) {
 		},
 	])
 
-	return postToJournal(name, entry, id, user)
+	return postToJournal(user, entry.entry, id, user, entry)
 }
