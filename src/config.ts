@@ -1,6 +1,7 @@
 export const { signing_secret } = process.env
 export const { token } = process.env
 export const { journal_channel } = process.env
+export const { user_token } = process.env
 export const name = 'Paevik'
 
 export const apiKey = process.env.FirebaseapiKey
