@@ -2,13 +2,28 @@ import { journal_channel, token } from '../../config'
 
 import { app } from '../../index'
 
-export const postMessage = (channel: string, blocks?: any[], text = '') =>
-	app.client.chat.postMessage({
-		channel,
-		text,
-		blocks,
-		token,
-	})
+export const postMessage = (
+	channel: string,
+	blocks?: any[],
+	text = '',
+	icon_url?: string,
+	username?: string
+) =>
+	icon_url && username
+		? app.client.chat.postMessage({
+				channel,
+				text,
+				blocks,
+				token,
+				username,
+				icon_url,
+		  })
+		: app.client.chat.postMessage({
+				channel,
+				text,
+				blocks,
+				token,
+		  })
 
 export const postMessageCurry = (channel: string) => (
 	blocks?: any[],
