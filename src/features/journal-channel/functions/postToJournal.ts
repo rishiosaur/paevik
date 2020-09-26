@@ -15,48 +15,68 @@ const getLinkFromFile = async (file: File) =>
 		).file as File).permalink_public.split('-'),
 	].pop()}`
 
-export const postToJournal = async (
-	user: string,
-	value: string,
-	id: string,
-	userId: string,
-	entry: Entry
-) => {
-	const ref = db.collection('users').doc(userId).collection('entries').doc(id)
+export const postToJournal = async (user: string, id: string, entry: Entry) => {
+	const ref = db.collection('users').doc(user).collection('entries').doc(id)
 
 	const emoji = ['parrot_love', 'bellhop_bell', 'pencil', 'thinkspin']
 	const random = emoji[Math.floor(Math.random() * emoji.length)]
-
-	await ref.update({
-		submitted: true,
-	})
 
 	const initialBlocks = [
 		{
 			type: 'section',
 			text: {
 				type: 'mrkdwn',
-				text: `:${random}: New Journal entry from ${user} on ${currentDate()}:`,
+				text: `:${random}: New Journal entry from <@${user}> on ${currentDate()}:`,
 			},
 		},
 		{
 			type: 'section',
 			text: {
 				type: 'mrkdwn',
-				text: `> ${value}`,
+				text: `> ${entry.entry}`,
 			},
 		},
 	] as Array<any>
 
-	const fileBlocks: Array<any> = await entry.files?.map(async (file) => ({
-		type: 'image',
-		image_url: await getLinkFromFile(file),
-		alt_text: file.name,
-		title: file.title,
-	}))
+	let msg
 
-	return postMessage(
-		journal_channel,
-		await [...initialBlocks, ...(await Promise.all(fileBlocks))]
-	)
+	if (entry.files) {
+		const fileBlocks = await Promise.all(
+			entry.files?.map(async (file) => ({
+				type: 'image',
+				image_url: await getLinkFromFile(file),
+				alt_text: file.name,
+			}))
+		)
+
+		const interimBlocks: any[] = [
+			{
+				type: 'divider',
+			},
+			{
+				type: 'section',
+				text: {
+					type: 'mrkdwn',
+					text: `*Files:*`,
+				},
+			},
+		]
+
+		msg = postMessage(
+			journal_channel,
+			await [
+				...initialBlocks,
+				...interimBlocks,
+				...(await Promise.all(fileBlocks)),
+			]
+		)
+	} else {
+		msg = postMessage(journal_channel, initialBlocks)
+	}
+
+	await ref.update({
+		submitted: true,
+	})
+
+	return msg
 }
