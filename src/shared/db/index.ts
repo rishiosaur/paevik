@@ -1,4 +1,3 @@
-// import moment from "moment";
 import { db } from '../../index'
 import { UserState, User } from '../../types/index'
 
