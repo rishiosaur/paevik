@@ -5,12 +5,7 @@ import { updatePostEntryMessage } from './functions/updatePostEntryMessage'
 import { db } from '../../index'
 const journal = async (app: App) => {
 	app.action('postEntry', async ({ ack, body, action }) => {
-		const postEntryDone = await postEntry(
-			ack,
-			action,
-			body,
-			`<@${body.user.id}>`
-		)
+		const postEntryDone = await postEntry(ack, action, body)
 		await updatePostEntryMessage(
 			(body as any).message.ts,
 			(body as any).container.channel_id,
@@ -28,7 +23,7 @@ const journal = async (app: App) => {
 	})
 
 	app.action('postEntryAnonymously', async ({ ack, body, action }) => {
-		const postEntryDone = await postEntry(ack, action, body, `*Anonymous*`)
+		const postEntryDone = await postEntry(ack, action, body)
 
 		await updatePostEntryMessage(
 			(body as any).message.ts,
