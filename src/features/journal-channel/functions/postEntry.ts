@@ -1,6 +1,6 @@
 import { ButtonAction, SlackAction } from '@slack/bolt'
 import { Entry } from '../../../types/index'
-import { journal_channel, token } from '../../../config'
+import { journal_channel } from '../../../config'
 import { postToJournal } from './postToJournal'
 
 import {
@@ -8,7 +8,6 @@ import {
 	getPermalinkFromJournalChannel,
 } from '../../../shared/messages/index'
 import { findEntryById } from '../../entries/functions/findEntryById'
-import { app } from '../../../index'
 
 export async function postEntry(ack, action, body: SlackAction) {
 	await ack()
