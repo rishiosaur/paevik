@@ -9,7 +9,7 @@ import {
 } from '../../../shared/messages/index'
 import { findEntryById } from '../../entries/functions/findEntryById'
 
-export async function postEntry(ack, action, body: SlackAction, name: string) {
+export async function postEntry(ack, action, body: SlackAction) {
 	await ack()
 
 	const act = action as ButtonAction & {
