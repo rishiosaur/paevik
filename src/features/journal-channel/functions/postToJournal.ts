@@ -1,9 +1,9 @@
 import { app, db } from '../../../index'
 import { File, Entry } from '../../../types/index'
 import { currentDate } from '../../../shared/time/index'
-import { postMessage } from '../../../shared/messages'
+import { postMessage, postEphemeralDMCurry } from '../../../shared/messages'
 
-import { journal_channel, user_token } from '../../../config'
+import { journal_channel, token, user_token } from '../../../config'
 
 const getLinkFromFile = async (file: File) =>
 	`${file.url_private}?pub_secret=${[
@@ -20,6 +20,8 @@ export const postToJournal = async (user: string, id: string, entry: Entry) => {
 
 	const emoji = ['parrot_love', 'bellhop_bell', 'pencil', 'thinkspin']
 	const random = emoji[Math.floor(Math.random() * emoji.length)]
+
+	const imE = postEphemeralDMCurry(user)
 
 	const initialBlocks = [
 		{
@@ -38,40 +40,70 @@ export const postToJournal = async (user: string, id: string, entry: Entry) => {
 		},
 	] as Array<any>
 
+	const { display_name, image_1024 } = ((await app.client.users.profile.get({
+		token,
+		user,
+	})) as any).profile
+
 	let msg
 
 	if (entry.files) {
 		const fileBlocks = await Promise.all(
-			entry.files?.map(async (file) => ({
-				type: 'image',
-				image_url: await getLinkFromFile(file),
-				alt_text: file.name,
-			}))
+			entry.files
+				.filter((file) => ['gif', 'jpeg', 'jpg', 'png'].includes(file.filetype))
+				.map(async (file) => ({
+					type: 'image',
+					image_url: await getLinkFromFile(file),
+					alt_text: file.name,
+				}))
 		)
 
-		const interimBlocks: any[] = [
-			{
-				type: 'divider',
-			},
-			{
-				type: 'section',
-				text: {
-					type: 'mrkdwn',
-					text: `*Files:*`,
+		if (fileBlocks.length < 1) {
+			await imE(
+				null,
+				"It doesn't look like your message contained any images. I've written your files to my database, but they won't be in the public message."
+			)
+			msg = postMessage(
+				journal_channel,
+				initialBlocks,
+				`Entry ${id}`,
+				image_1024,
+				display_name
+			)
+		} else {
+			const interimBlocks: any[] = [
+				{
+					type: 'divider',
 				},
-			},
-		]
+				{
+					type: 'section',
+					text: {
+						type: 'mrkdwn',
+						text: `*Files:*`,
+					},
+				},
+			]
 
+			msg = postMessage(
+				journal_channel,
+				await [
+					...initialBlocks,
+					...interimBlocks,
+					...(await Promise.all(fileBlocks)),
+				],
+				`Entry ${id}`,
+				image_1024,
+				display_name
+			)
+		}
+	} else {
 		msg = postMessage(
 			journal_channel,
-			await [
-				...initialBlocks,
-				...interimBlocks,
-				...(await Promise.all(fileBlocks)),
-			]
+			initialBlocks,
+			`Entry ${id}`,
+			image_1024,
+			display_name
 		)
-	} else {
-		msg = postMessage(journal_channel, initialBlocks)
 	}
 
 	await ref.update({
