@@ -23,6 +23,7 @@ export const app = new App({
 	token,
 })
 
+// dw about this
 const firebase = initializeApp({
 	apiKey,
 	authDomain,
